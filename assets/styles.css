@@ -3,6 +3,7 @@ body {
     background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     background-size: cover;
     height: 100vh;
+    font-family: 'Open Sans';
 }
 
 body, html {
@@ -23,11 +24,14 @@ body, html {
     margin: 0 auto;
     position: relative;
     padding: 20px;
+    padding-bottom: 50px;
     box-sizing: border-box;
 }
 
 .todo {
-    background: var(--green-color);
+    /* background: var(--green-color); */
+    background-color: #FF3CAC;
+    background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
 }
 
 .todo .container {
