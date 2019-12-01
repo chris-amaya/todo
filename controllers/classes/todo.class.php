@@ -36,6 +36,12 @@
             return $query;
         }
 
+        public function taskFinished($newState, $id) {
+            $query = mysqli_query($this->con, "UPDATE todos SET done = '$newState' WHERE idTodo = '$id'");
+            return $query;
+
+        }
+
         
         private function validateQuery($query)
         {

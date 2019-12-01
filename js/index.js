@@ -15,8 +15,8 @@ function templateTodos(task) {
             </div>
             <div>
                 <label>
-                    <input type="checkbox" id="checkboxTastComplete">
-                    <span></span>
+                    <input type="checkbox" >
+                    <span id="done"></span>
                 </label>
             </div>
             
@@ -39,9 +39,9 @@ async function handlerDocumentClick(e) {
     if(e.target.id == 'addTask') {
         addTask();
     }
-    
+
     if(e.target.id == 'deleteTask') {
-        if(confirm('Esta seguro que desea eliminar éste tarea?')) {
+        if(confirm('Esta seguro que desea eliminar ésta tarea?')) {
             deleteTask(e);
         }
     }
@@ -52,6 +52,19 @@ async function handlerDocumentClick(e) {
             updateTask(newTask, e.target.parentElement.parentElement.parentElement.dataset.idtask);
         }
 
+    }
+
+    if(e.target.id == 'done') {
+        console.log(e.target);
+        let newState
+        let idTask = e.target.parentElement.parentElement.parentElement.parentElement.dataset.idtask;
+        if(e.target.parentElement.children[0].checked == true) {
+            newState = 0
+        } else {
+            newState = 1;
+        }
+        e.target.parentElement.parentElement.parentElement.parentElement.children[0].classList.toggle('finished');
+        taskFinished(newState, idTask);
     }
 }
 
@@ -92,9 +105,10 @@ async function addTask() {
 async function renderTasks(tasks) {
 
     tasks.forEach((task, index) => {
-        // console.log(task);
         document.getElementById('items').innerHTML += templateTodos(task)
-        
+    })
+    tasks.forEach((task, index) => {
+        document.querySelector(`[data-idtask='${task.idTodo}']`).children[1].lastElementChild.firstElementChild.firstElementChild.checked = task.done == 1 || task.done == "1" ? true : false;
     })
 
 }
@@ -133,6 +147,24 @@ async function updateTask(task, id) {
     if(resDeleteTask == true) {
         document.querySelector(`[data-idtask="${id}"]`).children[0].textContent = task
     }
+}
+
+async function taskFinished(newState, idTask) {
+    let reqDeleteTask = await fetch('controllers/taskFinished.controller.php', {
+        method: 'POST',
+        body: JSON.stringify({
+            newState: newState,
+            idTask: idTask
+        }),
+        headers: {
+            'Content-Type': 'json/application'
+        }
+    })
+    let resDeleteTask = await reqDeleteTask.json();
+    console.log(resDeleteTask);
+    // if(resDeleteTask == true) {
+    //     document.querySelector(`[data-idtask="${id}"]`).children[0].textContent = task
+    // }
 }
 
 function validateInputTask() {
