@@ -1,6 +1,29 @@
 const taskText = document.getElementById('taskText');
 let errors = [];
 
+function templateTodos(task) {
+
+    return `
+    <div class="item" data-idtask=${task.idTodo}>
+        <p>${task.task}</p>
+        <div class="controls">
+            <div class="delete-container">
+                <i class="far fa-trash-alt" id="deleteTask"></i>
+            </div>
+            <div class="edit-container">
+                <i class="fas fa-pen" id="editTask"></i>
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" id="checkboxTastComplete">
+                    <span></span>
+                </label>
+            </div>
+            
+        </div>
+    </div>
+    `
+}
 taskText.addEventListener('keydown', (e) => handlerAddTask(e), false);
 document.addEventListener('click', (e) => handlerDocumentClick(e), false);
 document.addEventListener('DOMContentLoaded', (e) => handlerDocumentLoad(e), false);
@@ -45,34 +68,24 @@ async function addTask() {
         }
     });
     let resAddTask = await reqAddTask.json();
+    if(resAddTask.status == true) {
+        // document.getElementById('items').innerHTML
+        let task = {
+            idTodo: resAddTask.id,
+            task: taskText.value
+        }
+        document.getElementById('items').innerHTML += templateTodos(task)
+    }
     console.log(resAddTask);
+
 } 
 
 async function renderTasks(tasks) {
 
     tasks.forEach((task, index) => {
-        console.log(task);
-        document.getElementById('items').innerHTML += 
-        `
-        <div class="item" data-idtask=${task.idTodo}>
-            <p>${task.task}</p>
-            <div class="controls">
-                <div class="delete-container">
-                    <i class="far fa-trash-alt" id="deleteTask"></i>
-                </div>
-                <div class="edit-container">
-                    <i class="fas fa-pen" id="editTask"></i>
-                </div>
-                <div>
-                    <label>
-                        <input type="checkbox" id="checkboxTastComplete">
-                        <span></span>
-                    </label>
-                </div>
-                
-            </div>
-        </div>
-        `
+        // console.log(task);
+        document.getElementById('items').innerHTML += templateTodos(task)
+        
     })
 
 }
