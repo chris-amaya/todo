@@ -5,7 +5,7 @@ function templateTodos(task) {
 
     return `
     <div class="item" data-idtask=${task.idTodo}>
-        <p>${task.task}</p>
+        <p class="${task.done == 1 ? 'finished' : '' }">${task.task}</p>
         <div class="controls">
             <div class="delete-container">
                 <i class="far fa-trash-alt" id="deleteTask"></i>
@@ -39,11 +39,19 @@ async function handlerDocumentClick(e) {
     if(e.target.id == 'addTask') {
         addTask();
     }
-
+    
     if(e.target.id == 'deleteTask') {
         if(confirm('Esta seguro que desea eliminar éste tarea?')) {
             deleteTask(e);
         }
+    }
+
+    if(e.target.id == 'editTask') {
+        let newTask = prompt('Editar todo', e.target.parentElement.parentElement.parentElement.children[0].textContent)
+        if(!newTask || newTask != null) {
+            updateTask(newTask, e.target.parentElement.parentElement.parentElement.dataset.idtask);
+        }
+
     }
 }
 
@@ -72,7 +80,8 @@ async function addTask() {
         // document.getElementById('items').innerHTML
         let task = {
             idTodo: resAddTask.id,
-            task: taskText.value
+            task: taskText.value,
+            done: 0
         }
         document.getElementById('items').innerHTML += templateTodos(task)
     }
@@ -105,6 +114,24 @@ async function deleteTask(e) {
     // console.log(resDeleteTask);
     if(resDeleteTask == true) {
         e.target.parentElement.parentElement.parentElement.remove();
+    }
+}
+
+async function updateTask(task, id) {
+    let reqDeleteTask = await fetch('controllers/updateTask.controller.php', {
+        method: 'POST',
+        body: JSON.stringify({
+            idTask: id,
+            task: task
+        }),
+        headers: {
+            'Content-Type': 'json/application'
+        }
+    })
+    let resDeleteTask = await reqDeleteTask.json();
+    console.log(resDeleteTask);
+    if(resDeleteTask == true) {
+        document.querySelector(`[data-idtask="${id}"]`).children[0].textContent = task
     }
 }
 

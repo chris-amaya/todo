@@ -31,6 +31,11 @@
             return $query;
         }
 
+        public function updateTask($task, $id) {
+            $query = mysqli_query($this->con, "UPDATE todos SET task = '$task' WHERE idTodo = '$id'");
+            return $query;
+        }
+
         
         private function validateQuery($query)
         {
