@@ -18,15 +18,17 @@
         public function insertTask($task) {
             $query = mysqli_query($this->con, "INSERT INTO todos VALUES (null, '$task', 0)");
             $id = mysqli_insert_id($this->con);
-            // $id = $query->insert_id;
-            // $id = new 
-            // return $this->validateQuery($query)$asdf;
-            // return new ArrayObject()
             return json_encode(array(
                 'query' => $query,
                 'id' => $id
                 )
             );
+        }
+
+        public function deleteTask($id) {
+            $query = mysqli_query($this->con, "DELETE FROM todos WHERE idTodo = '$id'");
+            // return $this->validateQuery($query);
+            return $query;
         }
 
         
